@@ -43,13 +43,8 @@ def main():
 
     #print gmail list API
     messages = ListMessagesMatchingQuery(service, 'me', queryString)
+    messagesID = GetMessageID(messages)
     #print(messages)
-
-    if not messages:
-        print('No Messages found.')
-    else:
-        for message in messages:
-            print(message['id'])
 
 
 def ListMessagesMatchingQuery(service, user_id, query=''):
@@ -85,6 +80,12 @@ def ListMessagesMatchingQuery(service, user_id, query=''):
     print('An error occurred')
 
 
+def GetMessageID(messages):
+    if not messages:
+        print('No Messages found.')
+    else:
+        for message in messages:
+            print(message['id'])
 
 
 if __name__ == '__main__':
