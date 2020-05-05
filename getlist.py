@@ -7,6 +7,7 @@ from google.auth.transport.requests import Request
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+ME = 'me'
 
 def main():
     """Shows basic usage of the Gmail API.
@@ -33,19 +34,22 @@ def main():
 
     service = build('gmail', 'v1', credentials=creds)
 
-    # Call gmail list API
+    #Print Email Count
     queryString = 'before:2012/01/01 and after:2011/01/01 and label:unread'
-    email_count = len(ListMessagesMatchingQuery(service, 'me', queryString))
-
-    print('Email count:', email_count)
-    #print list of message IDs
-    #print(ListMessagesMatchingQuery(service, 'me', queryString))
+    PrintEmailCount(service, queryString)
+    print('Checking for messages matching %s...' % queryString)
 
     #print gmail list API
-    messages = ListMessagesMatchingQuery(service, 'me', queryString)
-    messagesID = GetMessageID(messages)
-    #print(messages)
+    #messages = ListMessagesMatchingQuery(service, ME, queryString)
+    messagesIDs = GetMessageIDs(ListMessagesMatchingQuery(service, ME, queryString))
 
+    #print(messagesIDs)
+    print('job completed')
+
+
+def PrintEmailCount(service, queryString):
+    email_count = len(ListMessagesMatchingQuery(service, ME, queryString))
+    print('Email count:', email_count)
 
 def ListMessagesMatchingQuery(service, user_id, query=''):
   """List all Messages of the user's mailbox matching the query.
@@ -80,12 +84,19 @@ def ListMessagesMatchingQuery(service, user_id, query=''):
     print('An error occurred')
 
 
-def GetMessageID(messages):
+def GetMessageIDs(messages):
+    messagesIDs = []
+    mesID = ""
     if not messages:
         print('No Messages found.')
     else:
         for message in messages:
-            print(message['id'])
+            #print(message['id'])
+            #mesID = message['id']
+            messagesIDs.append(message['id'])
+        return messagesIDs
+
+
 
 
 if __name__ == '__main__':
