@@ -4,18 +4,18 @@ from __future__ import print_function
 import pickle
 import os.path
 from googleapiclient.discovery import build
-from googleapiclient import errors
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 # If modifying these scopes, delete the file token.pickle.
-SCOPES = ['https://mail.google.com/']
+SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 ME = 'me'
+
 
 def main():
     """Shows basic usage of the Gmail API.
-    Lists the user's Gmail labels.
-    """
+        Lists the user's Gmail labels.
+        """
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -38,24 +38,32 @@ def main():
     service = build('gmail', 'v1', credentials=creds)
 
     #Print Email Count
-    queryString = 'after: 2020/05/05'
-    PrintEmailCount(service, queryString)
-    print('Checking for messages matching %s...' % queryString)
+    queryString = 'before:2012/01/01 and after:2011/01/01 and label:unread'
+    queryTest = 'after: 2020/05/05'
+    PrintEmailCount(service, queryTest)
+
+    print('Checking for messages matching %s...' % queryTest)
 
     #print gmail list API
     #messages = ListMessagesMatchingQuery(service, ME, queryString)
-    messagesIDs = GetMessageIDs(ListMessagesMatchingQuery(service, ME, queryString))
+    messagesIDs = ListMessagesMatchingQuery(service, ME, queryTest)
 
     #print(messagesIDs)
-    prepID = prep_messages_for_delete(messagesIDs)
-    print(prepID)
+    raw_messages = prep_messages_for_delete(ListMessagesMatchingQuery(service, ME, queryTest))
 
-    test = {'ids': ['171e293d24888845,']}
-    print(test)
-    batch_delete_messages(service,prepID)
+    messagesList = GetMessageIDs(raw_messages)
+    print(messagesList)
+    idList = prep_messages_for_delete(messagesList)
+    print(idList)
+
+    #batch_delete_messages(service, messagesList)
+
+
 
     print('job completed')
 
+
+#need to make a get credentions function
 
 def PrintEmailCount(service, queryString):
     email_count = len(ListMessagesMatchingQuery(service, ME, queryString))
@@ -93,18 +101,16 @@ def ListMessagesMatchingQuery(service, user_id, query=''):
   except:
     print('An error occurred')
 
+def GetMessageIDs(raw_messages):
+    ids = []
 
-def GetMessageIDs(messages):
-
-    messagesIDs = []
-    mesID = ""
-    if not messages:
+    if not raw_messages:
         print('No Messages found.')
     else:
-        for message in messages:
-            messagesIDs.append(message['id'])
-        #print(messagesIDs)
-    return messagesIDs
+        for message in raw_messages:
+            ids.append(message['id'])
+        print(ids)
+    return ids
 
 def prep_messages_for_delete(ids):
     prepMessage = {
@@ -113,23 +119,21 @@ def prep_messages_for_delete(ids):
 
     prepMessage['ids'].extend(ids)
 
-    return
+    return prepMessage
 
 def batch_delete_messages(service, messages):
-    #print("ready to delete {} messages".format(len(messages['ids'])))
+    print("ready to delete {} messages".format(len(messages['ids'])))
     user_id = "me"
-    print(messages)
+
     try:
         service.users().messages().batchDelete(
-            userId=ME,
+            userId=user_id,
             body=messages
         ).execute()
-
 
         print("I deleted stuff!")
     except errors.HttpError as error:
         print('An error occurred while batchDeleting: {0}'.format(error))
-
 
 if __name__ == '__main__':
     main()
