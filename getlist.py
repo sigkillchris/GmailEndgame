@@ -46,13 +46,13 @@ def main():
     #messages = ListMessagesMatchingQuery(service, ME, queryString)
     messagesIDs = GetMessageIDs(ListMessagesMatchingQuery(service, ME, queryString))
 
-    #print(messagesIDs)
+    print(messagesIDs)
     prepID = prep_messages_for_delete(messagesIDs)
     print(prepID)
 
-    test = {'ids': ['171e293d24888845,']}
+    test = {'ids': ['12cd3e5f463ddc77']}
     print(test)
-    batch_delete_messages(service,prepID)
+    batch_delete_messages(service, test)
 
     print('job completed')
 
