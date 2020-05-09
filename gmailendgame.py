@@ -1,5 +1,16 @@
 #! usr/bin/env python3
 
+__author__ = "Chris Carr"
+#__copyright__ =
+__credits__ = ["Rob Knight", "Peter Maxwell", "Gavin Huttley",
+                    "Matthew Wakefield"]
+__license__ = "GPL"
+__version__ = "1.0.1"
+__maintainer__ = "Rob Knight"
+__email__ = "rob@spot.colorado.edu"
+__status__ = "Production"
+
+
 from __future__ import print_function
 import sys
 import pickle
