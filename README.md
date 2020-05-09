@@ -6,7 +6,7 @@ I love my gmail username, but it's filled with 21 years worth of junk and subscr
 that I didn't archive and I didn't want to keep.
 
 
-###Install Required Modules
+### Install Required Modules
 1. cd to the directory where requirements.txt is located.
 2. activate your virtualenv.
 3. run: `pip install -r requirements.txt in your shell.`
