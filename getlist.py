@@ -1,6 +1,7 @@
 #! usr/bin/env python3
 
 from __future__ import print_function
+import sys
 import pickle
 import os.path
 from googleapiclient.discovery import build
@@ -38,28 +39,62 @@ def main():
     service = build('gmail', 'v1', credentials=creds)
 
     #Print Email Count
-    queryString = 'after: 2020/05/05'
-    PrintEmailCount(service, queryString)
-    print('Checking for messages matching %s...' % queryString)
+    queryString = 'before:2012/01/01 and after:2010/01/01 and label:unread'
+    count = PrintEmailCount(service, queryString)
+    print("Email count: %s" % count)
+    print('Checking for messages matching query: %s' % queryString)
 
     #print gmail list API
-    #messages = ListMessagesMatchingQuery(service, ME, queryString)
-    messagesIDs = GetMessageIDs(ListMessagesMatchingQuery(service, ME, queryString))
+    messages = ListMessagesMatchingQuery(service, ME, queryString)
 
-    print(messagesIDs)
+    messagesIDs = GetMessageIDs(messages)
+
     prepID = prep_messages_for_delete(messagesIDs)
-    print(prepID)
-
-    test = {'ids': ['12cd3e5f463ddc77']}
-    print(test)
-    batch_delete_messages(service, test)
+    question = "Are you sure you want to delete %s emails?" % count
+    if query_yes_no(question) is True:
+        batch_delete_messages(service, prepID)
+        print("Deleted Messages")
+    else:
+        print("False, did NOT del Messages")
 
     print('job completed')
 
 
+def query_yes_no(question, default="no"):
+    """Ask a yes/no question via raw_input() and return their answer.
+
+    "question" is a string that is presented to the user.
+    "default" is the presumed answer if the user just hits <Enter>.
+        It must be "yes" (the default), "no" or None (meaning
+        an answer is required of the user).
+
+    The "answer" return value is one of "yes" or "no".
+    """
+    valid = {"yes": True, "y": True, "ye": True,
+             "no": False, "n": False}
+    if default == None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = input().lower()
+        if default is not None and choice == '':
+            return default
+        elif choice in valid.keys():
+            return valid[choice]
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no' " \
+                             "(or 'y' or 'n').\n")
+
 def PrintEmailCount(service, queryString):
     email_count = len(ListMessagesMatchingQuery(service, ME, queryString))
-    print('Email count:', email_count)
+    return email_count
 
 def ListMessagesMatchingQuery(service, user_id, query=''):
   """List all Messages of the user's mailbox matching the query.
@@ -97,7 +132,6 @@ def ListMessagesMatchingQuery(service, user_id, query=''):
 def GetMessageIDs(messages):
 
     messagesIDs = []
-    mesID = ""
     if not messages:
         print('No Messages found.')
     else:
@@ -113,7 +147,7 @@ def prep_messages_for_delete(ids):
 
     prepMessage['ids'].extend(ids)
 
-    return
+    return prepMessage
 
 def batch_delete_messages(service, messages):
     #print("ready to delete {} messages".format(len(messages['ids'])))
