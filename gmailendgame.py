@@ -1,14 +1,13 @@
 #! usr/bin/env python3
 
-__author__ = "Chris Carr"
+__author__ = "Chris C"
 #__copyright__ =
-__credits__ = ["Rob Knight", "Peter Maxwell", "Gavin Huttley",
-                    "Matthew Wakefield"]
-__license__ = "GPL"
+#__credits__ =
+#__license__ = "GPL"
 __version__ = "1.0.1"
-__maintainer__ = "Rob Knight"
-__email__ = "rob@spot.colorado.edu"
-__status__ = "Production"
+__maintainer__ = "Chris"
+#__email__ = ""
+__status__ = "Use at your own risk"
 
 
 from __future__ import print_function
