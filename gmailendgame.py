@@ -1,5 +1,14 @@
 #! usr/bin/env python3
 
+from __future__ import print_function
+import sys
+import pickle
+import os.path
+from googleapiclient.discovery import build
+from googleapiclient import errors
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+
 __author__ = "Chris C"
 #__copyright__ =
 #__credits__ =
@@ -9,15 +18,6 @@ __maintainer__ = "Chris"
 #__email__ = ""
 __status__ = "Use at your own risk"
 
-
-from __future__ import print_function
-import sys
-import pickle
-import os.path
-from googleapiclient.discovery import build
-from googleapiclient import errors
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://mail.google.com/']
@@ -50,7 +50,7 @@ def main():
 
     #Print Email Count
     #Edit queryString with your query, test that query in gmail.
-    queryString = 'before:2012/01/01 and after:2010/01/01 and label:unread'
+    queryString = 'before:2013/01/01 and after:2012/01/01 and label:unread'
     count = PrintEmailCount(service, queryString)
     print("Email count: %s" % count)
     print('Checking for messages matching query: %s' % queryString)
