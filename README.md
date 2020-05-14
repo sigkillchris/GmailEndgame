@@ -12,7 +12,7 @@ that I didn't archive and I didn't want to keep.
 ### Install Required Modules
 1. cd to the directory where requirements.txt is located.
 2. activate your virtualenv.
-3. run: `pip install -r requirements.txt in your shell.`
+3. run: `pip install -r requirements.txt` in your shell.
 
 Unlike Endgame, there's no going back. The delete is permanent. You will be asked to confirm
 the delete, however, the response defaults to "no." -You're welcome
